@@ -22,7 +22,7 @@ As you craft your objects, one of the most important things to remember is the _
 
 Here's a really common example. Most of our code has functions to update and write things to the DOM in addition to our application logic. It's a _really_ good idea to separate your DOM stuff from the application logic.
 
-So instead of this:
+The following code block has two issues that will be tackled separately:
 
 ~~~javascript
 function isGameOver() {
@@ -37,8 +37,7 @@ function isGameOver() {
   }
 }
 ~~~
-
-You should extract all the DOM manipulation into its own module and use it like so:
+The first issue is that a function supposed to check whether a certain game is over or not contains DOM related methods for creating and appending elements. You should extract all the DOM manipulation into its own module and use it like so:
 
 ~~~javascript
 function isGameOver() {
@@ -50,8 +49,20 @@ function isGameOver() {
   }
 }
 ~~~
+That's better, but a second issue still remains. The function `isGameOver` shouldn't be calling the DOM function anyway. It should be called elsewhere, e.g. directly in the game-loop logic of a `Game` module:
 
-In fact - the function `isGameOver` shouldn't be calling the DOM function anyway. That should go elsewhere (directly in the game-loop).
+~~~javascript
+function Game() {      
+    function gameLoop() {
+
+      // game loop logic stars here!
+
+      if (gameOver){
+        DOMStuff.gameOver(this.winner);
+      }
+    }
+}
+~~~
 
 Another way to think about the Single Responsibility Principle is that a given method/class/component should have a single reason to change. Otherwise, if an object is trying to have multiple responsibilities, changing one aspect might affect another. 
 
